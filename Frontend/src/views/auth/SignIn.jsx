@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
+  const [para, setPara] = useState(false);
   const navigate = useNavigate();
 
   const handleGoogleSignIn = async () => {
@@ -18,18 +19,29 @@ export default function SignIn() {
     console.log(emailInputRef.current.value);
     console.log(passwordInputRef.current.value);
     setLoading(true);
+    setPara(false);
+
     try {
       const response = await axios.post(
         "http://localhost:4002/api/users/login",
         { email, password }
       );
-
+      console.log(response);
       // Handle successful response
-      if (response.status == 200) {
+      if (response.status === 200) {
+        console.log("navigating");
         navigate("/");
-      } else {
+        if (response.data.accessToken) {
+          localStorage.setItem("accessToken", response.data.accessToken);
+
+          console.log("Login successful!");
+        } else {
+          console.log("Login failed!");
+        }
       }
     } catch (error) {
+      console.log("else block");
+      setPara(true);
     } finally {
       setLoading(false);
     }
@@ -85,6 +97,12 @@ export default function SignIn() {
           ref={passwordInputRef}
         />
         {/* Checkbox */}
+        <p
+          className="text-red-500"
+          style={{ display: !para ? "none" : "block" }}
+        >
+          Invalid Credentials
+        </p>
         <div className="mb-4 flex items-center justify-between px-2">
           <div className="flex items-center">
             <Checkbox />
