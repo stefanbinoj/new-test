@@ -29,8 +29,6 @@ const registerUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Couldn't create a user ");
   }
-
-  res.json({ message: "Register the user" });
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -39,7 +37,9 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Validation Error ");
   }
-  const user = User.findOne({ email });
+  const user = await User.findOne({ email });
+
+  console.log("User found : ", user);
   if (user && (await bcrypt.compare(password, user.password))) {
     const accessToken = jwt.sign(
       {
@@ -56,7 +56,6 @@ const loginUser = asyncHandler(async (req, res) => {
     res.status(401);
     throw new Error("Validation unsuccessfull");
   }
-  res.json({ message: "Login the user" });
 });
 
 const currUser = asyncHandler(async (req, res) => {
