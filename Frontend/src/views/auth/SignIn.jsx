@@ -1,17 +1,41 @@
 import InputField from "components/fields/InputField";
 import { FcGoogle } from "react-icons/fc";
 import Checkbox from "components/checkbox";
-import { useRef } from "react";
+import { useRef, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export default function SignIn() {
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
+
   const handleGoogleSignIn = async () => {
     console.log("hiu");
   };
   const handleEmaiSignIn = async () => {
-    console.log("im trying to build a ref");
+    const email = emailInputRef.current.value;
+    const password = passwordInputRef.current.value;
     console.log(emailInputRef.current.value);
+    console.log(passwordInputRef.current.value);
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        "http://localhost:4002/api/users/login",
+        { email, password }
+      );
+
+      // Handle successful response
+      if (response.status == 200) {
+        navigate("/");
+      } else {
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
+    }
   };
   const emailInputRef = useRef();
+  const passwordInputRef = useRef();
 
   return (
     <div className="mb-16 mt-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
@@ -58,6 +82,7 @@ export default function SignIn() {
           placeholder="Min. 8 characters"
           id="password"
           type="password"
+          ref={passwordInputRef}
         />
         {/* Checkbox */}
         <div className="mb-4 flex items-center justify-between px-2">
