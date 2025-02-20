@@ -1,24 +1,20 @@
 import InputField from "components/fields/InputField";
 import { FcGoogle } from "react-icons/fc";
 import Checkbox from "components/checkbox";
-import { useRef } from "react";
 
-export default function SignIn() {
+export default function Register() {
   const handleGoogleSignIn = async () => {
-    console.log("hiu");
+    console.log("hi");
   };
   const handleEmaiSignIn = async () => {
-    console.log("im trying to build a ref");
-    console.log(emailInputRef.current.value);
+    console.log("hiu");
   };
-  const emailInputRef = useRef();
-
   return (
     <div className="mb-16 mt-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
       {/* Sign in section */}
       <div className="mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
         <h4 className="mb-2.5 text-4xl font-bold text-navy-700 dark:text-white">
-          Sign In
+          Register
         </h4>
         <p className="mb-9 ml-1 text-base text-gray-600">
           Enter your email and password to sign in!
@@ -47,7 +43,6 @@ export default function SignIn() {
           placeholder="mail@simmmple.com"
           id="email"
           type="text"
-          ref={emailInputRef}
         />
 
         {/* Password */}
@@ -82,13 +77,13 @@ export default function SignIn() {
         </button>
         <div className="mt-4">
           <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">
-            Not registered yet?
+            Alreaady Have acc ?
           </span>
           <a
-            href="/auth/register"
+            href="/auth/sign-in"
             className="ml-1 text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-white"
           >
-            Create an account
+            Login
           </a>
         </div>
       </div>
