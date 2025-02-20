@@ -1,5 +1,6 @@
 const express = require("express");
 const passport = require("passport");
+const jwt = require("jsonwebtoken");
 
 const {
   registerUser,
@@ -28,16 +29,20 @@ router.get(
     failureRedirect: "/login",
   }),
   (req, res) => {
-    console.log(12);
     const user = req.user;
-
-    const token = generateToken(
-      { sub: user._id, email: user.email },
-      process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+    console.log("google user : ", user);
+    const accessToken = jwt.sign(
+      {
+        user: {
+          email: user.email,
+          id: user.id,
+        },
+      },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "7d" }
     );
 
-    res.cookie("jwt", token, { httpOnly: true, secure: false });
+    res.cookie("jwt", accessToken, { httpOnly: true, secure: false });
     res.redirect("/dashboard");
   }
 );

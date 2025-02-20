@@ -8,9 +8,9 @@ const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 
 const tokenExtractor = (req) => {
   let token = null;
-  if (req && req.cookies) {
-    token = req.cookies["token"];
-  }
+  let authHeader = req.headers.authorization || req.headers.Authorization;
+  if (authHeader && authHeader.startsWith("Bearer"))
+    token = authHeader.split(" ")[1];
   return token;
 };
 
@@ -22,7 +22,8 @@ const opts = {
 passport.use(
   new JwtStrategy(opts, async (jwt_payload, done) => {
     try {
-      const user = await User.findOne({ _id: jwt_payload.sub });
+      const user = await User.findOne({ email: jwt_payload.user.email });
+      console.log("user", user);
       if (user) {
         return done(null, user);
       } else {
