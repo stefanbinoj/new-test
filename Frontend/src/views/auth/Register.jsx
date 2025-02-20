@@ -1,18 +1,34 @@
 import InputField from "components/fields/InputField";
 import { FcGoogle } from "react-icons/fc";
 import Checkbox from "components/checkbox";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
 export default function Register() {
   const [loading, setLoading] = useState(false);
   const [para, setPara] = useState(false);
   const navigate = useNavigate();
 
-  const handleGoogleSignIn = async () => {
-    console.log("hiu");
+  const HandleGoogleSignIn = async () => {
+    // Assuming the backend sends the JWT token in the response
+    window.location.href = "http://localhost:4002/api/users/google";
+    try {
+      const urlParams = new URLSearchParams(window.location.search);
+      const accessToken = urlParams.get("accessToken");
+      if (accessToken) {
+        console.log("local storage setup : ", accessToken);
+        localStorage.setItem("accessToken", accessToken);
+
+        navigate("/");
+      } else {
+        navigate("/auth/register");
+      }
+    } catch (error) {
+      console.error("Error during Google sign-in:", error);
+      navigate("/auth/register");
+    }
   };
+
   const handleEmaiSignIn = async () => {
     const email = emailInputRef.current.value;
     const password = passwordInputRef.current.value;
@@ -54,7 +70,7 @@ export default function Register() {
           Enter your email and password to sign in!
         </p>
         <div
-          onClick={handleGoogleSignIn}
+          onClick={HandleGoogleSignIn}
           className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-lightPrimary hover:cursor-pointer dark:bg-navy-800"
         >
           <div className="rounded-full text-xl">

@@ -42,8 +42,7 @@ router.get(
       { expiresIn: "7d" }
     );
 
-    res.cookie("jwt", accessToken, { httpOnly: true, secure: false });
-    res.redirect("/dashboard");
+    res.redirect(`http://localhost:3000/?accessToken=${accessToken}`);
   }
 );
 
