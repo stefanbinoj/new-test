@@ -1,5 +1,4 @@
 const express = require("express");
-const passport = require("passport");
 
 const {
   registerUser,
@@ -15,14 +14,5 @@ router.get("/ping", (req, res) => res.status(200).json({ message: "pong" }));
 router.post("/register", registerUser);
 router.post("/login", loginUser);
 router.get("/current", validateToken, currUser);
-
-// Google Federated Login Route
-router.get(
-  "/login/federated/google",
-  passport.authenticate("jwt", { session: false }),
-  (req, res, next) => {
-    next();
-  }
-);
 
 module.exports = router;
