@@ -19,14 +19,14 @@ export default function SignIn() {
         <p className="mb-9 ml-1 text-base text-gray-600">
           Enter your email and password to sign in!
         </p>
-        <div className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-lightPrimary hover:cursor-pointer dark:bg-navy-800">
+        <div
+          onClick={handleGoogleSignIn}
+          className="mb-6 flex h-[50px] w-full items-center justify-center gap-2 rounded-xl bg-lightPrimary hover:cursor-pointer dark:bg-navy-800"
+        >
           <div className="rounded-full text-xl">
             <FcGoogle />
           </div>
-          <h5
-            onClick={handleGoogleSignIn}
-            className="text-sm font-medium text-navy-700 dark:text-white"
-          >
+          <h5 className="text-sm font-medium text-navy-700 dark:text-white">
             Sign In with Google
           </h5>
         </div>
