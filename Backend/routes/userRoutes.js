@@ -1,7 +1,5 @@
 const express = require("express");
 const passport = require("passport");
-const GoogleStrategy = require("passport-google-oidc");
-const User = require("../models/userModel");
 
 const {
   registerUser,
