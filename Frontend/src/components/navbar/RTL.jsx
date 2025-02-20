@@ -49,7 +49,7 @@ const Navbar = (props) => {
 
       <div className="relative mt-[3px] flex h-[61px] w-[355px] flex-grow items-center justify-around gap-2 rounded-full bg-white px-2 py-2 shadow-xl shadow-shadow-500 dark:!bg-navy-800 dark:shadow-none md:w-[365px] md:flex-grow-0 md:gap-1 xl:w-[365px] xl:gap-2">
         <div className="flex h-full items-center rounded-full bg-lightPrimary text-navy-700 dark:bg-navy-900 dark:text-white xl:w-[225px]">
-          <p className="text-xl pe-2 ps-3">
+          <p className="pe-2 ps-3 text-xl">
             <FiSearch className="h-4 w-4 text-gray-400 dark:text-white" />
           </p>
           <input
@@ -87,11 +87,11 @@ const Navbar = (props) => {
                 <div className="flex h-full w-[85px] items-center justify-center rounded-xl bg-gradient-to-b from-brandLinear to-brand-500 py-4 text-2xl text-white">
                   <BsArrowBarUp />
                 </div>
-                <div className="flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm ms-2">
-                  <p className="mb-1 text-base font-bold text-gray-900 text-start dark:text-white">
+                <div className="ms-2 flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm">
+                  <p className="mb-1 text-start text-base font-bold text-gray-900 dark:text-white">
                     New Update: Horizon UI Dashboard PRO
                   </p>
-                  <p className="font-base text-xs text-gray-900 text-start dark:text-white">
+                  <p className="font-base text-start text-xs text-gray-900 dark:text-white">
                     A new update for your downloaded item is available!
                   </p>
                 </div>
@@ -101,18 +101,20 @@ const Navbar = (props) => {
                 <div className="flex h-full w-[85px] items-center justify-center rounded-xl bg-gradient-to-b from-brandLinear to-brand-500 py-4 text-2xl text-white">
                   <BsArrowBarUp />
                 </div>
-                <div className="flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm ms-2">
-                  <p className="mb-1 text-base font-bold text-gray-900 text-start dark:text-white">
+                <div className="ms-2 flex h-full w-full flex-col justify-center rounded-lg px-1 text-sm">
+                  <p className="mb-1 text-start text-base font-bold text-gray-900 dark:text-white">
                     New Update: Horizon UI Dashboard PRO
                   </p>
-                  <p className="font-base text-xs text-gray-900 text-start dark:text-white">
+                  <p className="font-base text-start text-xs text-gray-900 dark:text-white">
                     A new update for your downloaded item is available!
                   </p>
                 </div>
               </button>
             </div>
           }
-          classNames={"py-2 top-4 left-0 -start-[230px] md:-start-[440px] w-max"}
+          classNames={
+            "py-2 top-4 left-0 -start-[230px] md:-start-[440px] w-max"
+          }
         />
         {/* start Horizon PRO */}
         <Dropdown
@@ -154,7 +156,9 @@ const Navbar = (props) => {
               </a>
             </div>
           }
-          classNames={"py-2 top-6 left-0 -start-[250px] md:-start-[330px] w-max"}
+          classNames={
+            "py-2 top-6 left-0 -start-[250px] md:-start-[330px] w-max"
+          }
           animation="origin-[75%_0%] md:origin-top-end transition-all duration-300 ease-in-out"
         />
         <div
@@ -189,7 +193,7 @@ const Navbar = (props) => {
               <div className="p-4">
                 <div className="flex items-center gap-2">
                   <p className="text-sm font-bold text-navy-700 dark:text-white">
-                    👋 Hey, Adela
+                    👋 Hey, A
                   </p>{" "}
                 </div>
               </div>
@@ -210,7 +214,7 @@ const Navbar = (props) => {
                 </a>
                 <a
                   href=" "
-                  className="mt-3 text-sm font-medium text-red-500 hover:text-red-500 transition duration-150 ease-out hover:ease-in"
+                  className="mt-3 text-sm font-medium text-red-500 transition duration-150 ease-out hover:text-red-500 hover:ease-in"
                 >
                   Log Out
                 </a>

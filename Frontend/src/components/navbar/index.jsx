@@ -1,7 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Dropdown from "components/dropdown";
 import { FiAlignJustify } from "react-icons/fi";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import navbarimage from "assets/img/layout/Navbar.png";
 import { BsArrowBarUp } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
@@ -11,8 +11,40 @@ import {
   IoMdInformationCircleOutline,
 } from "react-icons/io";
 import avatar from "assets/img/avatars/avatar4.png";
+import axios from "axios";
 
 const Navbar = (props) => {
+  const navigate = useNavigate();
+  const [token, setToken] = useState(null);
+  const [name, setName] = useState(null);
+  useEffect(() => {
+    const fetchData = async () => {
+      let tokenInLocal = localStorage.getItem("accessToken");
+      if (tokenInLocal) {
+        console.log("Token present", tokenInLocal);
+        setToken(tokenInLocal);
+
+        try {
+          const response = await axios.get(
+            "http://localhost:4002/api/users/current",
+            {
+              headers: {
+                Authorization: "Bearer " + tokenInLocal, // Using token from localStorage
+              },
+            }
+          );
+
+          console.log("Response Data:", response.data);
+          setName(response.data.email);
+        } catch (error) {
+          console.error("Error fetching data:", error);
+        }
+      }
+    };
+
+    // Call async function
+    fetchData();
+  }, []);
   const { onOpenSidenav, brandText } = props;
   const [darkmode, setDarkmode] = React.useState(false);
 
@@ -186,13 +218,24 @@ const Navbar = (props) => {
           }
           children={
             <div className="flex w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
-              <div className="p-4">
-                <div className="flex items-center gap-2">
-                  <p className="text-sm font-bold text-navy-700 dark:text-white">
-                    👋 Hey, Adela
-                  </p>{" "}
+              {token ? (
+                <div className="p-4">
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-bold text-navy-700 dark:text-white">
+                      👋 Hey, {name}
+                    </p>{" "}
+                  </div>
                 </div>
-              </div>
+              ) : (
+                <button
+                  className="mx-5 my-2 rounded bg-brandLinear px-1"
+                  onClick={() => {
+                    navigate("/auth/sign-in");
+                  }}
+                >
+                  Login
+                </button>
+              )}
               <div className="h-px w-full bg-gray-200 dark:bg-white/20 " />
 
               <div className="flex flex-col p-4">
@@ -210,7 +253,7 @@ const Navbar = (props) => {
                 </a>
                 <a
                   href=" "
-                  className="mt-3 text-sm font-medium text-red-500 hover:text-red-500 transition duration-150 ease-out hover:ease-in"
+                  className="mt-3 text-sm font-medium text-red-500 transition duration-150 ease-out hover:text-red-500 hover:ease-in"
                 >
                   Log Out
                 </a>
