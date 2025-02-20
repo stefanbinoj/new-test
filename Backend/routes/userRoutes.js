@@ -1,4 +1,7 @@
 const express = require("express");
+var passport = require("passport");
+var GoogleStrategy = require("passport-google-oidc");
+
 const {
   registerUser,
   loginUser,
@@ -17,5 +20,7 @@ router.post("/register", registerUser);
 router.post("/login", loginUser);
 
 router.get("/current", validateToken, currUser);
+
+router.get("/login/federated/google", passport.authenticate("google"));
 
 module.exports = router;
