@@ -10,16 +10,37 @@ import { columnsDataCheck, columnsDataComplex } from "./variables/columnsData";
 
 import Widget from "components/widget/Widget";
 import CheckTable from "views/admin/default/components/CheckTable";
+import InitialFocus from "views/admin/default/components/CompanyModal";
 import ComplexTable from "views/admin/default/components/ComplexTable";
 import DailyTraffic from "views/admin/default/components/DailyTraffic";
 import TaskCard from "views/admin/default/components/TaskCard";
 import tableDataCheck from "./variables/tableDataCheck.json";
 import tableDataComplex from "./variables/tableDataComplex.json";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const [showCompanyModal, setCompanyModal] = useState(false);
+
+  const hanleModalClose = () => {
+    setCompanyModal(false);
+  };
+
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const accessToken = urlParams.get("accessToken");
+    const showModal = urlParams.get("showCompanyModel");
+    if (accessToken) {
+      console.log("local storage setup : ", accessToken);
+      localStorage.setItem("accessToken", accessToken);
+    }
+    if (showModal) setCompanyModal(true);
+  }, []);
   return (
     <div>
       {/* Card widget */}
+      {showCompanyModal && (
+        <InitialFocus isOpen={showCompanyModal} onClose={hanleModalClose} />
+      )}
 
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
         <Widget

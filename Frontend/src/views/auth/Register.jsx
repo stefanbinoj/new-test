@@ -12,21 +12,6 @@ export default function Register() {
   const HandleGoogleSignIn = async () => {
     // Assuming the backend sends the JWT token in the response
     window.location.href = "http://localhost:4002/api/users/google";
-    try {
-      const urlParams = new URLSearchParams(window.location.search);
-      const accessToken = urlParams.get("accessToken");
-      if (accessToken) {
-        console.log("local storage setup : ", accessToken);
-        localStorage.setItem("accessToken", accessToken);
-
-        navigate("/");
-      } else {
-        navigate("/auth/register");
-      }
-    } catch (error) {
-      console.error("Error during Google sign-in:", error);
-      navigate("/auth/register");
-    }
   };
 
   const handleEmaiSignIn = async () => {

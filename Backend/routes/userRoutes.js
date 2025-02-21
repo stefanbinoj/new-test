@@ -6,6 +6,7 @@ const {
   registerUser,
   loginUser,
   currUser,
+  verifyUser,
 } = require("../controller/userController");
 const validateToken = require("../middleware/validateTokenHandler");
 
@@ -14,6 +15,7 @@ const router = express.Router();
 // Routes
 router.get("/ping", (req, res) => res.status(200).json({ message: "pong" }));
 router.post("/register", registerUser);
+router.post("/verify-otp", verifyUser);
 router.post("/login", loginUser);
 router.get("/current", validateToken, currUser);
 
@@ -42,7 +44,9 @@ router.get(
       { expiresIn: "7d" }
     );
 
-    res.redirect(`http://localhost:3000/?accessToken=${accessToken}`);
+    res.redirect(
+      `http://localhost:3000/admin/default?accessToken=${accessToken}&showCompanyModel=true`
+    );
   }
 );
 

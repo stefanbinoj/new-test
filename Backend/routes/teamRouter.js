@@ -6,6 +6,7 @@ const validateToken = require("../middleware/validateTokenHandler");
 const router = express.Router();
 
 router.post("/add-team", validateToken, async (req, res) => {
+  console.log(req.body);
   const { team_name } = req.body;
   const { id } = req.user;
 
