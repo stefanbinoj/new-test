@@ -32,7 +32,7 @@ export default function Register() {
       // Handle successful response
       if (response.status === 201) {
         console.log("navigating");
-        navigate("/auth/sign-in");
+        navigate(`/auth/verify?email=${encodeURIComponent(email)}`);
       }
     } catch (error) {
       console.log("else block");

@@ -9,6 +9,7 @@ import DataTables from "views/admin/tables";
 // Auth Imports
 import SignIn from "views/auth/SignIn";
 import Register from "views/auth/Register";
+import Verify from "views/auth/Verify";
 
 // Icon Imports
 import {
@@ -62,6 +63,13 @@ const routes = [
     path: "register",
     icon: <MdLock className="h-6 w-6" />,
     component: <Register />,
+  },
+  {
+    name: "Verify",
+    layout: "/auth",
+    path: "verify",
+    icon: <MdLock className="h-6 w-6" />,
+    component: <Verify />,
   },
 ];
 export default routes;

@@ -11,7 +11,7 @@ export default function SignIn() {
   const navigate = useNavigate();
 
   const handleGoogleSignIn = async () => {
-    console.log("hiu");
+    window.location.href = "http://localhost:4002/api/users/google";
   };
   const handleEmaiSignIn = async () => {
     const email = emailInputRef.current.value;
