@@ -5,6 +5,7 @@ import PieChartCard from "views/admin/default/components/PieChartCard";
 import { IoMdHome } from "react-icons/io";
 import { IoDocuments } from "react-icons/io5";
 import { MdBarChart, MdDashboard } from "react-icons/md";
+import toast, { Toaster } from "react-hot-toast";
 
 import { columnsDataCheck, columnsDataComplex } from "./variables/columnsData";
 
@@ -18,8 +19,14 @@ import tableDataCheck from "./variables/tableDataCheck.json";
 import tableDataComplex from "./variables/tableDataComplex.json";
 import { useEffect, useState } from "react";
 
+const notify = () => {
+  console.log(12);
+  toast("Here is your toast.");
+};
+
 const Dashboard = () => {
   const [showCompanyModal, setCompanyModal] = useState(false);
+  const [showToaster, setShowToaster] = useState(false);
 
   const hanleModalClose = () => {
     setCompanyModal(false);
@@ -31,16 +38,27 @@ const Dashboard = () => {
     const showModal = urlParams.get("showCompanyModel");
     if (accessToken) {
       console.log("local storage setup : ", accessToken);
+      console.log("modal : ", showModal);
       localStorage.setItem("accessToken", accessToken);
+      setShowToaster(true);
     }
     if (showModal) setCompanyModal(true);
   }, []);
+
+  useEffect(() => {
+    if (showToaster) {
+      toast.success("Created Account sucessfully");
+    }
+  }, [showToaster]); // Depend on showToaster to trigger toast when it's true
+
   return (
     <div>
       {/* Card widget */}
       {showCompanyModal && (
         <InitialFocus isOpen={showCompanyModal} onClose={hanleModalClose} />
       )}
+
+      <Toaster />
 
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
         <Widget

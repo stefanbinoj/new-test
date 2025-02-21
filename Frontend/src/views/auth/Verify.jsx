@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function Verify() {
   const [email, setEmail] = useState("");
@@ -46,7 +47,10 @@ export default function Verify() {
       // Handle successful response
       if (response.status === 200) {
         console.log("navigating");
+        toast.success("Email Verified");
         navigate("/auth/sign-in");
+      } else {
+        toast.error("Email Verified failed");
       }
     } catch (error) {
       console.log("else block");

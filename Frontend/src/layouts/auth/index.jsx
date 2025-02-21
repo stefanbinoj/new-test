@@ -54,6 +54,10 @@ export default function Auth() {
                     path="/register"
                     element={<Navigate to="/auth/register" replace />}
                   />
+                  <Route
+                    path="/verify"
+                    element={<Navigate to="/auth/verify" replace />}
+                  />
                 </Routes>
                 <div className="absolute right-0 hidden h-full min-h-screen md:block lg:w-[49vw] 2xl:w-[44vw]">
                   <div

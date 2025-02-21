@@ -4,6 +4,8 @@ import Checkbox from "components/checkbox";
 import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
+
 export default function Register() {
   const [loading, setLoading] = useState(false);
   const [para, setPara] = useState(false);
@@ -32,10 +34,12 @@ export default function Register() {
       // Handle successful response
       if (response.status === 201) {
         console.log("navigating");
+        toast.success("Email Registered");
         navigate(`/auth/verify?email=${encodeURIComponent(email)}`);
       }
     } catch (error) {
       console.log("else block");
+      toast.error("Email Registeration unsuccessfull");
       setPara(true);
     } finally {
       setLoading(false);
@@ -47,6 +51,7 @@ export default function Register() {
   return (
     <div className="mb-16 mt-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
       {/* Sign in section */}
+      <Toaster />
       <div className="mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
         <h4 className="mb-2.5 text-4xl font-bold text-navy-700 dark:text-white">
           Register here

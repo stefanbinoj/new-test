@@ -4,6 +4,7 @@ import Checkbox from "components/checkbox";
 import { useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
@@ -12,6 +13,7 @@ export default function SignIn() {
 
   const handleGoogleSignIn = async () => {
     window.location.href = "http://localhost:4002/api/users/google";
+    toast.error("Google sign in failed");
   };
   const handleEmaiSignIn = async () => {
     const email = emailInputRef.current.value;
@@ -30,6 +32,7 @@ export default function SignIn() {
       // Handle successful response
       if (response.status === 200) {
         console.log("navigating");
+        toast.success("Sign In complete");
         navigate("/");
         if (response.data.accessToken) {
           localStorage.setItem("accessToken", response.data.accessToken);
@@ -40,6 +43,7 @@ export default function SignIn() {
         }
       }
     } catch (error) {
+      toast.error("Invalid credentials");
       console.log("else block");
       setPara(true);
     } finally {
@@ -52,6 +56,7 @@ export default function SignIn() {
   return (
     <div className="mb-16 mt-16 flex h-full w-full items-center justify-center px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-start">
       {/* Sign in section */}
+      <Toaster />
       <div className="mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
         <h4 className="mb-2.5 text-4xl font-bold text-navy-700 dark:text-white">
           Sign In
