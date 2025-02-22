@@ -26,6 +26,10 @@ const SessionProvider = ({ children }) => {
           navigate("/auth/verify");
         } else navigate("/auth/sign-in");
       } else {
+        if (window.location.pathname === "/auth/register")
+          navigate("/admin/default");
+        if (window.location.pathname === "/auth/verify")
+          navigate("/admin/default");
         setSessionValid(true);
         setIsAdmin(response.data.isAdmin);
         setLoading(false);
