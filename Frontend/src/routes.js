@@ -2,23 +2,14 @@ import React from "react";
 
 // Admin Imports
 import MainDashboard from "views/admin/default";
-import NFTMarketplace from "views/admin/marketplace";
 import Profile from "views/admin/profile";
 import DataTables from "views/admin/tables";
 
 // Auth Imports
 import SignIn from "views/auth/SignIn";
-import Register from "views/auth/Register";
-import Verify from "views/auth/Verify";
 
 // Icon Imports
-import {
-  MdHome,
-  MdOutlineShoppingCart,
-  MdBarChart,
-  MdPerson,
-  MdLock,
-} from "react-icons/md";
+import { MdHome, MdBarChart, MdPerson, MdLock } from "react-icons/md";
 
 const routes = [
   {
@@ -28,14 +19,7 @@ const routes = [
     icon: <MdHome className="h-6 w-6" />,
     component: <MainDashboard />,
   },
-  {
-    name: "NFT Marketplace",
-    layout: "/admin",
-    path: "nft-marketplace",
-    icon: <MdOutlineShoppingCart className="h-6 w-6" />,
-    component: <NFTMarketplace />,
-    secondary: true,
-  },
+
   {
     name: "Data Tables",
     layout: "/admin",
@@ -56,20 +40,6 @@ const routes = [
     path: "sign-in",
     icon: <MdLock className="h-6 w-6" />,
     component: <SignIn />,
-  },
-  {
-    name: "Register",
-    layout: "/auth",
-    path: "register",
-    icon: <MdLock className="h-6 w-6" />,
-    component: <Register />,
-  },
-  {
-    name: "Verify",
-    layout: "/auth",
-    path: "verify",
-    icon: <MdLock className="h-6 w-6" />,
-    component: <Verify />,
   },
 ];
 export default routes;

@@ -19,11 +19,6 @@ import tableDataCheck from "./variables/tableDataCheck.json";
 import tableDataComplex from "./variables/tableDataComplex.json";
 import { useEffect, useState } from "react";
 
-const notify = () => {
-  console.log(12);
-  toast("Here is your toast.");
-};
-
 const Dashboard = () => {
   const [showCompanyModal, setCompanyModal] = useState(false);
   const [showToaster, setShowToaster] = useState(false);
@@ -37,8 +32,6 @@ const Dashboard = () => {
     const accessToken = urlParams.get("accessToken");
     const showModal = urlParams.get("showCompanyModel");
     if (accessToken) {
-      console.log("local storage setup : ", accessToken);
-      console.log("modal : ", showModal);
       localStorage.setItem("accessToken", accessToken);
       setShowToaster(true);
     }

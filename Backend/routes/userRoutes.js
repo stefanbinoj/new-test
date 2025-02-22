@@ -49,7 +49,7 @@ router.get(
       );
     }
     res.redirect(
-      `http://localhost:3000/admin/default?accessToken=${accessToken}&showCompany=true`
+      `http://localhost:3000/admin/default?accessToken=${accessToken}&showCompanyModel=true`
     );
   }
 );

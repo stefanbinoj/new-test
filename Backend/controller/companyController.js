@@ -13,7 +13,7 @@ const getCompany = asyncHandler(async (req, res) => {
       message: "Company Name present",
     });
   }
-  return res.status(404).json({
+  return res.status(200).json({
     status: "error",
     companyName: "No Company Name",
     message: "Company Name not present",

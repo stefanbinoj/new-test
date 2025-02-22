@@ -13,7 +13,6 @@ export default function SignIn() {
 
   const handleGoogleSignIn = async () => {
     window.location.href = "http://localhost:4002/api/users/google";
-    toast.error("Google sign in failed");
   };
   const handleEmaiSignIn = async () => {
     const email = emailInputRef.current.value;
@@ -108,20 +107,7 @@ export default function SignIn() {
         >
           Invalid Credentials
         </p>
-        <div className="mb-4 flex items-center justify-between px-2">
-          <div className="flex items-center">
-            <Checkbox />
-            <p className="ml-2 text-sm font-medium text-navy-700 dark:text-white">
-              Keep me logged In
-            </p>
-          </div>
-          <a
-            className="text-sm font-medium text-brand-500 hover:text-brand-600 dark:text-white"
-            href=" "
-          >
-            Forgot Password?
-          </a>
-        </div>
+
         <button
           onClick={handleEmaiSignIn}
           className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"

@@ -3,6 +3,10 @@ import { Routes, Route, Navigate } from "react-router-dom";
 
 import AdminLayout from "layouts/admin";
 import AuthLayout from "layouts/auth";
+
+import Register from "views/auth/Register";
+import Verify from "views/auth/Verify";
+
 const App = () => {
   return (
     <Routes>
@@ -10,6 +14,8 @@ const App = () => {
       <Route path="admin/*" element={<AdminLayout />} />
       {/* <Route path="rtl/*" element={<RtlLayout />} /> */}
       <Route path="/" element={<Navigate to="/admin" replace />} />
+      <Route path="auth/register" element={<Register />} />
+      <Route path="auth/verify" element={<Verify />} />
     </Routes>
   );
 };
