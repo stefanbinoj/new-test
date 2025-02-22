@@ -1,4 +1,5 @@
 const asyncHandler = require("express-async-handler");
+const jwt = require("jsonwebtoken");
 
 const checkSession = asyncHandler(async (req, res) => {
   const token = req.cookies.token;
@@ -20,15 +21,24 @@ const checkSession = asyncHandler(async (req, res) => {
       });
     }
     req.user = decode.user;
-    return res
-      .status(200)
-      .json({
-        status: "success",
-        message: "User present",
-        isValid: false,
-        isAdmin: true,
-      });
+    return res.status(200).json({
+      status: "success",
+      message: "User present",
+      isValid: true,
+      isAdmin: true,
+    });
   });
 });
 
-module.exports = { checkSession };
+const logoutSession = asyncHandler(async (req, res) => {
+  res.clearCookie("token", {
+    httpOnly: true, // Prevent client-side JavaScript from accessing the cookie
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "None", // set to 'None' if cookies are used cross-site
+  });
+
+  return res
+    .status(200)
+    .json({ status: "success", message: "Logged out successfully" });
+});
+module.exports = { checkSession, logoutSession };

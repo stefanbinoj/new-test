@@ -1,5 +1,5 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 
 import AdminLayout from "layouts/admin";
 import AuthLayout from "layouts/auth";
@@ -74,11 +74,7 @@ const App = () => {
         />
         <Route
           path="user/*"
-          element={
-            <ProtectedRoute>
-              <UserLayout />
-            </ProtectedRoute>
-          }
+          element={<ProtectedRoute>{/* <UserLayout /> */}</ProtectedRoute>}
         />
         <Route path="/" element={<Navigate to="/admin" replace />} />
         <Route path="*" element={<Navigate to="/auth/sign-in" replace />} />

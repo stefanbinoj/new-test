@@ -7,7 +7,7 @@ const ModalExample = ({ isOpen, onClose }) => {
   const [companyName, setCompanyName] = useState("");
   const handleCompanyNameSubmit = async () => {
     try {
-      const response = await axiosWithCookie().post("/api/teams/add-company", {
+      await axiosWithCookie().post("/api/teams/add-company", {
         companyName: companyName,
       });
       //if (response.data.status === "success") toast.success("Company Added");

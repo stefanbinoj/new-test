@@ -53,10 +53,9 @@ export default function SignIn() {
     setLoading(true);
     setError(false);
     let response = null;
-
     try {
       response = await axios.post(
-        `${process.env._APP_API_URL}/api/users/login`,
+        `${process.env.REACT_APP_API_URL}/api/users/login`,
         { email, password }
       );
 

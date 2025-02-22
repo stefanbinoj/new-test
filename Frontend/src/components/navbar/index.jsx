@@ -34,8 +34,8 @@ const Navbar = (props) => {
   const { onOpenSidenav, brandText } = props;
   const [darkmode, setDarkmode] = React.useState(false);
 
-  const handleLogout = () => {
-    //todo
+  const handleLogout = async () => {
+    await axiosWithCookie().get("/api/session/session-logout");
     navigate("/auth/sign-in");
   };
 

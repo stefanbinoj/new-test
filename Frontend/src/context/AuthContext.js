@@ -1,5 +1,5 @@
-import axiosWithCookie from "axios";
-import React, { createContext, useState, useEffect } from "react";
+import axiosWithCookie from "../axios";
+import React, { createContext, useState, useContext, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const SessionContext = createContext();
@@ -20,7 +20,8 @@ const SessionProvider = ({ children }) => {
 
       console.log(response);
 
-      if (!response.data.status === "success" || !response.data.isValid) {
+      if (response.data.status !== "success" || !response.data.isValid) {
+        console.log(12);
         setLoading(false);
         navigate("/auth/sign-in");
       } else {
@@ -35,6 +36,10 @@ const SessionProvider = ({ children }) => {
       navigate("/auth/sign-in");
     }
   };
+
+  useEffect(() => {
+    checkSession();
+  }, []);
 
   return (
     <SessionContext.Provider value={{ sessionValid, isAdmin, loading }}>
@@ -51,4 +56,4 @@ export const useSession = () => {
   return context;
 };
 
-export { SessionProvider, SessionContext, useSession };
+export { SessionProvider, SessionContext };
