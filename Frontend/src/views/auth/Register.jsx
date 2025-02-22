@@ -35,9 +35,6 @@ export default function Register() {
         setError(false);
         toast.success("Email registered successfully ");
 
-        setTimeout(() => {
-          console.log("After 1 second");
-        }, 1000);
         navigate(`/auth/verify?email=${email}`);
       } else {
         setError(true);

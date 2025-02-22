@@ -26,7 +26,6 @@ const updateCompany = asyncHandler(async (req, res) => {
     return res.status(404).json({ status: "error", message: "User not found" });
   }
 
-  console.log("User found for updating company: ", user);
   const { companyName } = req.body;
   if (!companyName) {
     return res
