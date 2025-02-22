@@ -12,9 +12,12 @@ import {
 } from "react-icons/io";
 import avatar from "assets/img/avatars/avatar4.png";
 import axiosWithHeaders from "../../axios";
+import { useNavigate, Navigate } from "react-router-dom";
 
 const Navbar = (props) => {
   const [name, setName] = useState(null);
+  const navigate = useNavigate();
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -33,6 +36,7 @@ const Navbar = (props) => {
 
   const handleLogout = () => {
     localStorage.removeItem("accessToken");
+    navigate("/auth/sign-in");
   };
 
   return (
