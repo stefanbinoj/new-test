@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const axiosWithHeaders = () => {
+const axiosWithCookie = () => {
   // Set up the axios instance
   const instance = axios.create({
     baseURL: process.env.REACT_APP_API_URL, // Set the base URL for your API
@@ -13,4 +13,4 @@ const axiosWithHeaders = () => {
   return instance;
 };
 
-export default axiosWithHeaders;
+export default axiosWithCookie;

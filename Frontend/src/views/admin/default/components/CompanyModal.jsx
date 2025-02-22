@@ -1,13 +1,13 @@
 import { Modal, ModalOverlay, ModalContent, ModalBody } from "@chakra-ui/modal";
 import { useState } from "react";
 import { IoCloseCircleSharp } from "react-icons/io5";
-import axiosWithHeaders from "../../../../axios";
+import axiosWithCookie from "../../../../axios";
 import toast, { Toaster } from "react-hot-toast";
 const ModalExample = ({ isOpen, onClose }) => {
   const [companyName, setCompanyName] = useState("");
   const handleCompanyNameSubmit = async () => {
     try {
-      const response = await axiosWithHeaders().post("/api/teams/add-company", {
+      const response = await axiosWithCookie().post("/api/teams/add-company", {
         companyName: companyName,
       });
       //if (response.data.status === "success") toast.success("Company Added");

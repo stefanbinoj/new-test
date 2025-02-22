@@ -3,7 +3,7 @@ import avatar from "assets/img/avatars/avatar11.png";
 import banner from "assets/img/profile/banner.png";
 import Card from "components/card";
 import InitialFocus from "../../default/components/CompanyModal";
-import axiosWithHeaders from "../../../../axios";
+import axiosWithCookie from "../../../../axios";
 import { CiEdit } from "react-icons/ci";
 
 const Banner = () => {
@@ -17,7 +17,7 @@ const Banner = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosWithHeaders().get("/api/teams/company");
+        const response = await axiosWithCookie().get("/api/teams/company");
         if (response.data.status === "success")
           setCompanyName(response.data.companyName);
         else if (response.data.status === "error")

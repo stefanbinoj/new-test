@@ -1,42 +1,54 @@
+import axiosWithCookie from "axios";
 import React, { createContext, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-// Create context
-const AuthContext = createContext();
+const SessionContext = createContext();
 
-// Create the AuthProvider component
-const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+const SessionProvider = ({ children }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const [sessionValid, setSessionValid] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  // Check if the user is logged in (e.g., check for accessToken in localStorage)
-  useEffect(() => {
-    const token = localStorage.getItem("accessToken");
-    if (token) {
-      setIsAuthenticated(true);
-    } else {
-      setIsAuthenticated(false);
+  const checkSession = async () => {
+    setLoading(true);
+    try {
+      const response = await axiosWithCookie().get(
+        "/api/session/session-check"
+      );
+
+      console.log(response);
+
+      if (!response.data.status === "success" || !response.data.isValid) {
+        setLoading(false);
+        navigate("/auth/sign-in");
+      } else {
+        setSessionValid(true);
+        setIsAdmin(response.data.isAdmin);
+        setLoading(false);
+      }
+    } catch (error) {
+      console.error("Session check failed:", error);
+      setSessionValid(false);
+      setLoading(false);
+      navigate("/auth/sign-in");
     }
-  }, []);
-
-  // Function to log in the user
-  const login = (token) => {
-    localStorage.setItem("accessToken", token);
-    setIsAuthenticated(true);
-  };
-
-  // Function to log out the user
-  const logout = () => {
-    localStorage.removeItem("accessToken");
-    setIsAuthenticated(false);
-    navigate("/auth/sign-in"); // Redirect to sign-in page after logout
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <SessionContext.Provider value={{ sessionValid, isAdmin, loading }}>
       {children}
-    </AuthContext.Provider>
+    </SessionContext.Provider>
   );
 };
 
-export { AuthProvider, AuthContext };
+export const useSession = () => {
+  const context = useContext(SessionContext);
+  if (!context) {
+    throw new Error("useSession must be used within a SessionProvider");
+  }
+  return context;
+};
+
+export { SessionProvider, SessionContext, useSession };

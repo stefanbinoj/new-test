@@ -11,7 +11,7 @@ import {
   IoMdInformationCircleOutline,
 } from "react-icons/io";
 import avatar from "assets/img/avatars/avatar4.png";
-import axiosWithHeaders from "../../axios";
+import axiosWithCookie from "../../axios";
 import { useNavigate } from "react-router-dom";
 
 const Navbar = (props) => {
@@ -21,7 +21,7 @@ const Navbar = (props) => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axiosWithHeaders().get("/api/users/current");
+        const response = await axiosWithCookie().get("/api/users/current");
         setName(response.data.user.email);
       } catch (error) {
         console.error("Error fetching data:", error);
