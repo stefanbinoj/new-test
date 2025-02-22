@@ -47,9 +47,9 @@ export default function Verify() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form submission from reloading the page
 
-    if (!otp) {
+    if (otp.join("").length != 6) {
       setError(true);
-      setPara("Please enter the OTP.");
+      setPara("Please enter correct OTP.");
       return;
     }
     setLoading(true);
@@ -132,8 +132,8 @@ export default function Verify() {
                     className="h-16 w-16 rounded-lg border-2 border-gray-300 text-center text-xl focus:outline-none focus:ring-2 focus:ring-brand-400"
                   />
                 ))}
-                {error && <p className="text-red-500">{para}</p>}
               </div>
+              {error && <p className="text-red-500">{para}</p>}
               <button
                 type="submit"
                 className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"

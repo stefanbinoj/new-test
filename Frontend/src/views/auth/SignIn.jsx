@@ -29,8 +29,27 @@ export default function SignIn() {
     window.location.href = `${process.env.REACT_APP_API_URL}/api/users/google`;
   };
   const handleEmaiSignIn = async () => {
-    const email = emailInputRef.current.value;
+    const email = emailInputRef.current.value; // No need for JSON.stringify()
     const password = passwordInputRef.current.value;
+
+    if (!email || !password) {
+      setError(true);
+      setPara("All fields are mandatory");
+      return;
+    }
+
+    if (!email.includes("@")) {
+      setError(true);
+      setPara("Please provide a valid email");
+      return;
+    }
+
+    if (password.length < 8) {
+      setError(true);
+      setPara("Password must be at least 8 characters");
+      return;
+    }
+
     setLoading(true);
     setError(false);
     let response = null;
