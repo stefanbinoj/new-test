@@ -43,9 +43,13 @@ router.get(
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "7d" }
     );
-
+    if (user.companyName) {
+      res.redirect(
+        `http://localhost:3000/admin/default?accessToken=${accessToken}`
+      );
+    }
     res.redirect(
-      `http://localhost:3000/admin/default?accessToken=${accessToken}&showCompanyModel=true`
+      `http://localhost:3000/admin/default?accessToken=${accessToken}&showCompany=true`
     );
   }
 );

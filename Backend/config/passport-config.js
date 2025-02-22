@@ -1,8 +1,9 @@
 const passport = require("passport");
-const User = require("../models/userModel");
 const { Strategy: JwtStrategy, ExtractJwt } = require("passport-jwt");
 const { Strategy: GoogleStrategy } = require("passport-google-oauth20");
+
 require("dotenv").config();
+const User = require("../models/userModel");
 
 const SECRET_KEY = process.env.ACCESS_TOKEN_SECRET;
 

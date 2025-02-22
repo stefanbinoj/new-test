@@ -2,102 +2,150 @@ const asyncHandler = require("express-async-handler");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
-const sendEmail = require("../config/emailSender");
+const sendEmail = require("../utils/sendEmail");
 const User = require("../models/userModel");
 
 const registerUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
+
+  // Validation check
   if (!email || !password) {
-    res.status(400);
-    throw new Error("All fields are mandatory");
+    return res
+      .status(400)
+      .json({ status: "error", message: "All fields are mandatory" });
   }
+
+  // Check if user already exists
   const userAvailable = await User.findOne({ email });
-  if (userAvailable) {
-    res.status(400);
-    throw new Error("Email exists");
+  if (userAvailable && userAvailable.isVerified) {
+    return res
+      .status(400)
+      .json({ status: "error", message: "User already exists. Login instead" });
   }
 
+  // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
-  console.log("Hashed Pass", hashedPassword);
 
+  // Generate verification code and expiry time
   const verificationCode = crypto.randomInt(100000, 999999);
-  const verificationCodeExpiry = Date.now() + 600000;
+  const verificationCodeExpiry = Date.now() + 600000; // 10 minutes
 
+  // Create user
   const user = await User.create({
     email,
     password: hashedPassword,
     verificationCode,
     verificationCodeExpiry,
   });
-  console.log("usr created : ", user);
-  sendEmail(email, verificationCode);
+
+  // Send verification email
+  await sendEmail(email, verificationCode);
+
+  // Check if user created successfully and send response
   if (user) {
-    res.status(201).json({ id: user.id, email: user.email });
+    return res.status(201).json({
+      status: "success",
+      email: user.email,
+      message: "Email has been sent successfully",
+    });
   } else {
-    res.status(400);
-    throw new Error("Couldn't create a user ");
+    return res
+      .status(500)
+      .json({ status: "error", message: "Error occurred while registering" });
   }
 });
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    res.status(400);
-    throw new Error("Validation Error ");
-  }
-  const user = await User.findOne({ email });
 
-  console.log("User found : ", user);
-  if (user && (await bcrypt.compare(password, user.password))) {
+  // Validation check
+  if (!email || !password) {
+    return res
+      .status(400)
+      .json({ status: "error", message: "All fields are mandatory" });
+  }
+
+  // Find user by email
+  const user = await User.findOne({ email });
+  if (!user) {
+    return res.status(404).json({ status: "error", message: "User not found" });
+  }
+
+  // Check if user is verified
+  if (!user.isVerified) {
+    return res.status(400).json({
+      status: "error",
+      message: "User not verified. Register user instead",
+    });
+  }
+
+  // Compare password
+  const isPasswordMatch = await bcrypt.compare(password, user.password);
+  if (user && isPasswordMatch) {
     const accessToken = jwt.sign(
-      {
-        user: {
-          email: user.email,
-          id: user.id,
-        },
-      },
+      { user: { email: user.email, id: user.id } },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "7d" }
     );
-    res.status(200).json({ accessToken });
-  } else {
-    res.status(401);
-    throw new Error("Validation unsuccessfull");
+    return res
+      .status(200)
+      .json({ status: "success", accessToken, message: "JWT created" });
   }
+
+  // If password is incorrect
+  return res.status(401).json({ status: "error", message: "Wrong Password" });
 });
 
 const currUser = asyncHandler(async (req, res) => {
-  res.json(req.user);
+  if (!req.user || !req.user.email) {
+    return res.status(401).json({ status: "error", message: "Unauthorized" });
+  }
+
+  // Send current user information
+  const user = await User.findOne({ email: req.user.email });
+  if (!user) {
+    return res.status(404).json({ status: "error", message: "User not found" });
+  }
+  return res.json({ status: "success", user });
 });
 
 const verifyUser = asyncHandler(async (req, res) => {
   const { email, verificationCode } = req.body;
 
-  // Find the user by email
+  // Find user by email
   const user = await User.findOne({ email });
-
-  // If user is not found, return 404
   if (!user) {
-    return res.status(404).json({ message: "User Not found" });
+    return res.status(404).json({ status: "error", message: "User not found" });
   }
 
-  // Check if the verification code has expired
+  // Check if user is already verified
+  if (user.isVerified) {
+    return res.status(400).json({
+      status: "error",
+      message: "User already verified. Login instead",
+    });
+  }
+
+  // Check if the code has expired
   if (Date.now() > user.verificationCodeExpiry) {
-    return res.status(400).json({ message: "Code Expired" });
+    return res
+      .status(400)
+      .json({ status: "error", message: "Verification code expired" });
   }
 
-  // Check if the provided verification code matches the stored one
+  // Verify the code
   if (verificationCode === user.verificationCode) {
-    // Update the user's verification status
     user.isVerified = true;
-    await user.save(); // Save the updated user document
-
-    // Return success response
-    return res.status(200).json({ message: "User Verified" });
+    await user.save();
+    return res
+      .status(200)
+      .json({ status: "success", message: "User verified" });
   }
 
-  // If the code is wrong
-  return res.status(400).json({ message: "Code Wrong" });
+  // Incorrect code
+  return res
+    .status(400)
+    .json({ status: "error", message: "Incorrect verification code" });
 });
 
 module.exports = { registerUser, loginUser, currUser, verifyUser };
