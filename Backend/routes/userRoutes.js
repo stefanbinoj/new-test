@@ -28,12 +28,16 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: "/login",
+    failureRedirect: "http://localhost:3000/auth/sign-in?error=true",
   }),
   (req, res) => {
-    console.log("From google", req.user);
     const user = req.user;
-    console.log("google user : ", user);
+    console.log(req.query);
+    if (req.query.error) {
+      return res.redirect(
+        `/auth/sign-in?error=true&message=${req.query.message}`
+      );
+    }
     const accessToken = jwt.sign(
       {
         user: {

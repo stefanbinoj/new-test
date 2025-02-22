@@ -1,46 +1,58 @@
 import InputField from "components/fields/InputField";
 import { FcGoogle } from "react-icons/fc";
-import Checkbox from "components/checkbox";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 
 export default function Register() {
   const [loading, setLoading] = useState(false);
-  const [para, setPara] = useState(false);
+  const [error, setError] = useState(false);
+
+  const [para, setPara] = useState("");
   const navigate = useNavigate();
 
   const HandleGoogleSignIn = async () => {
     // Assuming the backend sends the JWT token in the response
-    window.location.href = "http://localhost:4002/api/users/google";
+    window.location.href = `${process.env.REACT_APP_API_URL}/api/users/google`;
   };
 
   const handleEmaiSignIn = async () => {
     const email = emailInputRef.current.value;
     const password = passwordInputRef.current.value;
-    console.log(emailInputRef.current.value);
-    console.log(passwordInputRef.current.value);
     setLoading(true);
-    setPara(false);
+    setError(false);
+    let response = null;
 
     try {
-      const response = await axios.post(
-        "http://localhost:4002/api/users/register",
+      response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/users/register`,
         { email, password }
       );
-      console.log(response);
 
       // Handle successful response
-      if (response.status === 201) {
-        console.log("navigating");
-        toast.success("Email Registered");
-        navigate(`/auth/verify?email=${encodeURIComponent(email)}`);
+      if (response.data.status === "success") {
+        setError(false);
+        toast.success("Email registered successfully ");
+
+        setTimeout(() => {
+          console.log("After 1 second");
+        }, 1000);
+        navigate(`/auth/verify?email=${email}`);
+      } else {
+        setError(true);
+        setPara(response.data.message);
       }
     } catch (error) {
-      console.log("else block");
-      toast.error("Email Registeration unsuccessfull");
-      setPara(true);
+      setError(true);
+
+      // Check if the error has a response (for 400, 500, etc.)
+      if (error.response) {
+        setPara(error.response.data.message); // Access error message from the response
+      } else {
+        // Handle network errors, timeout errors, etc.
+        setPara("An error occurred. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -50,8 +62,8 @@ export default function Register() {
 
   return (
     <div className="relative mb-16 mt-16 flex h-full w-full items-center justify-center  px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-center">
-      <div className="">
-        <Link to="/admin" className="absolute  top-0 mt-0 w-max">
+      <div className="bg-white px-11 py-8">
+        <Link to="/admin" className="absolute top-10 w-max  ">
           <div className="mx-auto flex h-fit w-fit items-center hover:cursor-pointer">
             <svg
               width="8"
@@ -100,7 +112,7 @@ export default function Register() {
             label="Email*"
             placeholder="mail@simmmple.com"
             id="email"
-            type="text"
+            type="email"
             ref={emailInputRef}
           />
           {/* Password */}
@@ -115,18 +127,14 @@ export default function Register() {
           />
           {/* Checkbox */}
           {/* <p ref={pararef}>{pararef.current}</p> */}
-          <p
-            className="text-red-500"
-            style={{ display: !para ? "none" : "block" }}
-          >
-            Email exists
-          </p>
+          {error && <p className="text-red-500">{para}</p>}
 
           <button
             onClick={handleEmaiSignIn}
             className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+            disabled={loading}
           >
-            Sign In
+            {loading ? "Loading..." : "Create Account"}
           </button>
           <div className="mt-4">
             <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">

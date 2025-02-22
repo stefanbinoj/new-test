@@ -26,7 +26,7 @@ const registerUser = asyncHandler(async (req, res) => {
   if (userAvailable && userAvailable.isGoogleVerified) {
     return res.status(400).json({
       status: "error",
-      message: "Please sign in with Google",
+      message: "Google user found, please sign in with Google instead",
     });
   }
 
@@ -112,14 +112,23 @@ const loginUser = asyncHandler(async (req, res) => {
   // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(404).json({ status: "error", message: "User not found" });
+    return res
+      .status(404)
+      .json({ status: "error", message: "User not found. Please register" });
+  }
+
+  if (user && user.isGoogleVerified) {
+    return res.status(404).json({
+      status: "error",
+      message: "Google user found. Please login with Google instead",
+    });
   }
 
   // Check if user is verified
   if (!user.isVerified) {
     return res.status(400).json({
       status: "error",
-      message: "User not verified. Plese Verify the user ",
+      message: "User not verified. Plese Register instead ",
     });
   }
 

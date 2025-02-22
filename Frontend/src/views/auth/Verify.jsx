@@ -6,11 +6,11 @@ import toast, { Toaster } from "react-hot-toast";
 export default function Verify() {
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState("");
+  const [error, setError] = useState(false);
   const [para, setPara] = useState(false);
 
   const location = useLocation();
-  const queryParams = new URLSearchParams(location.search);
 
   const handleChange = (e, index) => {
     const value = e.target.value;
@@ -35,24 +35,25 @@ export default function Verify() {
 
   // Set email only once when the component mounts
   useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
     const emailFromParams = queryParams.get("email");
     if (emailFromParams) {
       setEmail(emailFromParams);
     }
-  }, [queryParams]); // Dependencies: this will only run once when the component mounts
+  }, [location.search]); // Dependencies: this will only run once when the component mounts
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form submission from reloading the page
 
-    setLoading(true);
-    setPara(false);
-
     if (!otp) {
+      setError(true);
       setPara("Please enter the OTP.");
       return;
     }
+    setLoading(true);
+    setError(false);
 
     try {
       const response = await axios.post(
@@ -62,19 +63,26 @@ export default function Verify() {
           verificationCode: otp.join(""),
         }
       );
-      console.log(response);
 
       // Handle successful response
-      if (response.status === 200) {
-        console.log("navigating");
+      if (response.data.status === "success") {
         toast.success("Email Verified");
-        navigate("/auth/sign-in");
+        navigate(`/admin/default`);
       } else {
-        toast.error("Email Verified failed");
+        setError(true);
+        setPara(response.data.message);
+        toast.error(response.data.message);
       }
     } catch (error) {
-      console.log("else block");
-      setPara(true);
+      setError(true);
+
+      // Check if the error has a response (for 400, 500, etc.)
+      if (error.response) {
+        setPara(error.response.data.message); // Access error message from the response
+      } else {
+        // Handle network errors, timeout errors, etc.
+        setPara("An error occurred. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
@@ -85,6 +93,7 @@ export default function Verify() {
       {/* Sign in section */}
       <div className="relative mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
         <div className="">
+          <Toaster />
           <Link to="/admin" className="absolute  top-0 mt-0 w-max">
             <div className="mx-auto flex h-fit w-fit items-center hover:cursor-pointer">
               <svg
@@ -123,7 +132,7 @@ export default function Verify() {
                     className="h-16 w-16 rounded-lg border-2 border-gray-300 text-center text-xl focus:outline-none focus:ring-2 focus:ring-brand-400"
                   />
                 ))}
-                {para && <p style={{ color: "red" }}>{para}</p>}
+                {error && <p className="text-red-500">{para}</p>}
               </div>
               <button
                 type="submit"

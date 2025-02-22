@@ -1,54 +1,74 @@
 import InputField from "components/fields/InputField";
 import { FcGoogle } from "react-icons/fc";
-import Checkbox from "components/checkbox";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import { useLocation } from "react-router-dom";
 
 export default function SignIn() {
   const [loading, setLoading] = useState(false);
-  const [para, setPara] = useState(false);
+  const [error, setError] = useState(false);
+  const [para, setPara] = useState("");
+
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const errorFromFrontend = queryParams.get("error");
+
+    if (errorFromFrontend) {
+      setError(true);
+      setPara("Please login With Email & Password instead");
+      toast.error("Please login With Email & Password instead");
+    }
+  }, [location.search]); // Dependency array includes location.search to rerun effect when URL changes
 
   const handleGoogleSignIn = async () => {
-    window.location.href = "http://localhost:4002/api/users/google";
+    window.location.href = `${process.env.REACT_APP_API_URL}/api/users/google`;
   };
   const handleEmaiSignIn = async () => {
     const email = emailInputRef.current.value;
     const password = passwordInputRef.current.value;
-    console.log(emailInputRef.current.value);
-    console.log(passwordInputRef.current.value);
     setLoading(true);
-    setPara(false);
+    setError(false);
+    let response = null;
 
     try {
-      const response = await axios.post(
-        "http://localhost:4002/api/users/login",
+      response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/api/users/login`,
         { email, password }
       );
-      console.log(response);
-      // Handle successful response
-      if (response.status === 200) {
-        console.log("navigating");
-        toast.success("Sign In complete");
-        navigate("/");
-        if (response.data.accessToken) {
-          localStorage.setItem("accessToken", response.data.accessToken);
 
-          console.log("Login successful!");
-        } else {
-          console.log("Login failed!");
-        }
+      // Handle successful response
+      if (response.data.status === "success") {
+        setError(false);
+        toast.success("Login Successfull");
+
+        const { accessToken } = response.data;
+        localStorage.setItem("accessToken", accessToken);
+
+        navigate(`/admin/default`);
+      } else {
+        setError(true);
+        setPara(response.data.message);
       }
     } catch (error) {
-      toast.error("Invalid credentials");
-      console.log("else block");
-      setPara(true);
+      setError(true);
+
+      // Check if the error has a response (for 400, 500, etc.)
+      if (error.response) {
+        setPara(error.response.data.message); // Access error message from the response
+      } else {
+        // Handle network errors, timeout errors, etc.
+        setPara("An error occurred. Please try again later.");
+      }
     } finally {
       setLoading(false);
     }
   };
+
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
 
@@ -101,18 +121,14 @@ export default function SignIn() {
           ref={passwordInputRef}
         />
         {/* Checkbox */}
-        <p
-          className="text-red-500"
-          style={{ display: !para ? "none" : "block" }}
-        >
-          Invalid Credentials
-        </p>
+        {error && <p className="text-red-500">{para}</p>}
 
         <button
           onClick={handleEmaiSignIn}
           className="linear mt-2 w-full rounded-xl bg-brand-500 py-[12px] text-base font-medium text-white transition duration-200 hover:bg-brand-600 active:bg-brand-700 dark:bg-brand-400 dark:text-white dark:hover:bg-brand-300 dark:active:bg-brand-200"
+          disabled={loading}
         >
-          Sign In
+          {loading ? "Loading..." : "Sign In"}
         </button>
         <div className="mt-4">
           <span className=" text-sm font-medium text-navy-700 dark:text-gray-600">

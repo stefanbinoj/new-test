@@ -47,14 +47,33 @@ passport.use(
       try {
         let user = await User.findOne({ email: profile.emails[0].value });
 
+        if (user) {
+          if (user.isGoogleVerified) {
+            console.log("Google User already exists");
+            return done(null, user);
+          } else if (user.isVerified) {
+            console.log("User already exists with email and isVerified");
+            return done(null, false, {
+              message: "User exists but not verified by Google.",
+            });
+          }
+          console.log("User already exists with email and is not isVerified");
+          return done(null, false, {
+            message: "User exists but not fully verified.",
+          });
+        }
+
         if (!user) {
           user = await User.create({
             email: profile.emails[0].value,
             isGoogleVerified: true,
+            google_id: profile.id,
+            profilePhoto: profile.photos[0].value,
           });
         }
         return done(null, user);
       } catch (error) {
+        console.error("Error in Google strategy: ", error);
         return done(error, null);
       }
     }

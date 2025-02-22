@@ -25,6 +25,10 @@ const userSchema = mongoose.Schema(
     isGoogleVerified: {
       type: Boolean,
     },
+    google_id: {
+      type: String,
+    },
+    profilePhoto: String,
   },
   {
     timestamps: true,
