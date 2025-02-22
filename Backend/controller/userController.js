@@ -127,20 +127,24 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (user && isPasswordMatch) {
-    const accessToken = jwt.sign(
+    const token = jwt.sign(
       { user: { email: user.email, id: user.id } },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "7d" }
     );
     const showCompany = user.companyName ? false : true;
-    return res
-      .status(200)
-      .json({
-        status: "success",
-        accessToken,
-        message: "JWT created",
-        showCompany,
-      });
+
+    res.cookie("token", token, {
+      httpOnly: true, // This prevents JavaScript from accessing the cookie
+      secure: process.env.NODE_ENV === "production", // set to true if you're using HTTPS
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+    });
+
+    return res.status(200).json({
+      status: "success",
+      message: "JWT created",
+      showCompany,
+    });
   }
 
   // If password is incorrect
@@ -178,12 +182,12 @@ const verifyUser = asyncHandler(async (req, res) => {
 
   // Check if the code has expired
   if (Date.now() > user.verificationCodeExpiry) {
-    return res
-      .status(400)
-      .json({ status: "error", message: "Verification code expired" });
+    return res.status(400).json({
+      status: "error",
+      message: "Verification code expired. Please register again",
+    });
   }
 
-  // Verify the code
   if (verificationCode === user.verificationCode) {
     user.isVerified = true;
     await user.save();

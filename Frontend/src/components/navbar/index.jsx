@@ -12,7 +12,7 @@ import {
 } from "react-icons/io";
 import avatar from "assets/img/avatars/avatar4.png";
 import axiosWithHeaders from "../../axios";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Navbar = (props) => {
   const [name, setName] = useState(null);
@@ -35,7 +35,7 @@ const Navbar = (props) => {
   const [darkmode, setDarkmode] = React.useState(false);
 
   const handleLogout = () => {
-    localStorage.removeItem("accessToken");
+    //todo
     navigate("/auth/sign-in");
   };
 

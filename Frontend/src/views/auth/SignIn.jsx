@@ -56,7 +56,7 @@ export default function SignIn() {
 
     try {
       response = await axios.post(
-        `${process.env.REACT_APP_API_URL}/api/users/login`,
+        `${process.env._APP_API_URL}/api/users/login`,
         { email, password }
       );
 
@@ -65,8 +65,7 @@ export default function SignIn() {
         setError(false);
         toast.success("Login Successfull");
 
-        const { accessToken, showCompany } = response.data;
-        localStorage.setItem("accessToken", accessToken);
+        const { showCompany } = response.data;
 
         if (showCompany === true) {
           return navigate(`/admin/default?showCompanyModel=true`);

@@ -38,7 +38,7 @@ router.get(
         `/auth/sign-in?error=true&message=${req.query.message}`
       );
     }
-    const accessToken = jwt.sign(
+    const token = jwt.sign(
       {
         user: {
           email: user.email,
@@ -48,13 +48,18 @@ router.get(
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "7d" }
     );
+
+    res.cookie("token", token, {
+      httpOnly: true, // This prevents JavaScript from accessing the cookie
+      secure: process.env.NODE_ENV === "production", // set to true if you're using HTTPS
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
+    });
+
     if (user.companyName) {
-      res.redirect(
-        `http://localhost:3000/admin/default?accessToken=${accessToken}`
-      );
+      return res.redirect(`${process.env.FRONTEND_BASE_URL}/admin/default`);
     }
-    res.redirect(
-      `http://localhost:3000/admin/default?accessToken=${accessToken}&showCompanyModel=true`
+    return res.redirect(
+      `${process.env.FRONTEND_BASE_URL}/admin/default?showCompanyModel=true`
     );
   }
 );

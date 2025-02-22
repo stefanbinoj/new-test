@@ -10,8 +10,8 @@ const ModalExample = ({ isOpen, onClose }) => {
       const response = await axiosWithHeaders().post("/api/teams/add-company", {
         companyName: companyName,
       });
-      if (response.data.status === "success") toast.success("Company Added");
-      else toast.error("Couldn't add company");
+      //if (response.data.status === "success") toast.success("Company Added");
+      //else toast.error("Couldn't add company");
     } catch (error) {
       toast.error("Couldn't add company");
       console.error("There was an error adding the team:", error);

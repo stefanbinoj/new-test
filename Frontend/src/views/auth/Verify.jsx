@@ -57,7 +57,7 @@ export default function Verify() {
 
     try {
       const response = await axios.post(
-        "http://localhost:4002/api/users/verify-otp",
+        `${process.env.REACT_APP_API_URL}/api/users/verify-otp`,
         {
           email: email,
           verificationCode: otp.join(""),
@@ -67,7 +67,7 @@ export default function Verify() {
       // Handle successful response
       if (response.data.status === "success") {
         toast.success("Email Verified");
-        navigate(`/admin/default`);
+        navigate(`/auth/sign-in`);
       } else {
         setError(true);
         setPara(response.data.message);

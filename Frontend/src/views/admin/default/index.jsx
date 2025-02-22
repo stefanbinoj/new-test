@@ -5,7 +5,6 @@ import PieChartCard from "views/admin/default/components/PieChartCard";
 import { IoMdHome } from "react-icons/io";
 import { IoDocuments } from "react-icons/io5";
 import { MdBarChart, MdDashboard } from "react-icons/md";
-import toast, { Toaster } from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 import { columnsDataCheck, columnsDataComplex } from "./variables/columnsData";
@@ -31,15 +30,12 @@ const Dashboard = () => {
 
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    const accessToken = urlParams.get("accessToken");
     const showModal = urlParams.get("showCompanyModel");
-    if (accessToken) {
-      localStorage.setItem("accessToken", accessToken);
-      toast.success("Created Account sucessfully");
-    }
-    if (showModal) setCompanyModal(true);
 
-    if (accessToken || showModal) navigate(`/admin/default`);
+    if (showModal) {
+      setCompanyModal(true);
+      navigate(`/admin/default`);
+    }
   }, [navigate]);
 
   return (
@@ -48,8 +44,6 @@ const Dashboard = () => {
       {showCompanyModal && (
         <InitialFocus isOpen={showCompanyModal} onClose={hanleModalClose} />
       )}
-
-      <Toaster />
 
       <div className="mt-3 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-3 3xl:grid-cols-6">
         <Widget
