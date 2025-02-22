@@ -5,7 +5,7 @@ const validateToken = asyncHandler(async (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({
+    return res.status(200).json({
       status: "error",
       message: "Authorization token is missing",
     });
@@ -14,7 +14,7 @@ const validateToken = asyncHandler(async (req, res, next) => {
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decode) => {
     if (err) {
       return res
-        .status(401)
+        .status(200)
         .json({ status: "error", message: "Wrong JWT. Please login again" });
     }
     req.user = decode.user;

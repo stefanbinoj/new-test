@@ -20,7 +20,11 @@ const SessionProvider = ({ children }) => {
 
       if (response.data.status !== "success" || !response.data.isValid) {
         setLoading(false);
-        navigate("/auth/sign-in");
+        if (window.location.pathname === "/auth/register") {
+          navigate("/auth/register");
+        } else if (window.location.pathname === "/auth/verify") {
+          navigate("/auth/verify");
+        } else navigate("/auth/sign-in");
       } else {
         setSessionValid(true);
         setIsAdmin(response.data.isAdmin);

@@ -4,7 +4,7 @@ const User = require("../models/userModel");
 const getCompany = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
-    return res.status(404).json({ status: "error", message: "User not found" });
+    return res.status(200).json({ status: "error", message: "User not found" });
   }
   if (user.companyName) {
     return res.status(200).json({
@@ -23,13 +23,13 @@ const getCompany = asyncHandler(async (req, res) => {
 const updateCompany = asyncHandler(async (req, res) => {
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
-    return res.status(404).json({ status: "error", message: "User not found" });
+    return res.status(200).json({ status: "error", message: "User not found" });
   }
 
   const { companyName } = req.body;
   if (!companyName) {
     return res
-      .status(400)
+      .status(200)
       .json({ status: "error", message: "Company name is required" });
   }
 

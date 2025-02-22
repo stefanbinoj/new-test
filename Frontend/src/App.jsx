@@ -1,5 +1,11 @@
 import React, { useEffect } from "react";
-import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import {
+  Routes,
+  Route,
+  Navigate,
+  useNavigate,
+  useLocation,
+} from "react-router-dom";
 
 import AdminLayout from "layouts/admin";
 import AuthLayout from "layouts/auth";
@@ -67,9 +73,9 @@ const App = () => {
         <Route
           path="admin/*"
           element={
-            <ProtectedRoute adminOnly={true}>
-              <AdminLayout />
-            </ProtectedRoute>
+            // <ProtectedRoute adminOnly={true}>
+            <AdminLayout />
+            // </ProtectedRoute>
           }
         />
         <Route

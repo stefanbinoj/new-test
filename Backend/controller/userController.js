@@ -10,20 +10,20 @@ const registerUser = asyncHandler(async (req, res) => {
 
   if (!email || !password) {
     return res
-      .status(400)
+      .status(200)
       .json({ status: "error", message: "All fields are mandatory" });
   }
 
   // Check if user already exists
   const userAvailable = await User.findOne({ email });
   if (userAvailable && userAvailable.isVerified) {
-    return res.status(400).json({
+    return res.status(200).json({
       status: "error",
       message: "Verified User already exists. Login instead",
     });
   }
   if (userAvailable && userAvailable.isGoogleVerified) {
-    return res.status(400).json({
+    return res.status(200).json({
       status: "error",
       message: "Google user found, please sign in with Google instead",
     });
@@ -36,7 +36,7 @@ const registerUser = asyncHandler(async (req, res) => {
     );
     if (!isPasswordMatch) {
       return res
-        .status(400)
+        .status(200)
         .json({ status: "error", message: "Password Incorrect" });
     }
 
@@ -90,7 +90,7 @@ const registerUser = asyncHandler(async (req, res) => {
     });
   } else {
     return res
-      .status(500)
+      .status(200)
       .json({ status: "error", message: "Error occurred while registering" });
   }
 });
@@ -100,26 +100,26 @@ const loginUser = asyncHandler(async (req, res) => {
 
   if (!email || !password) {
     return res
-      .status(400)
+      .status(200)
       .json({ status: "error", message: "All fields are mandatory" });
   }
 
   const user = await User.findOne({ email });
   if (!user) {
     return res
-      .status(404)
+      .status(200)
       .json({ status: "error", message: "User not found. Please register" });
   }
 
   if (user && user.isGoogleVerified) {
-    return res.status(404).json({
+    return res.status(200).json({
       status: "error",
       message: "Google user found. Please login with Google instead",
     });
   }
 
   if (!user.isVerified) {
-    return res.status(400).json({
+    return res.status(200).json({
       status: "error",
       message: "User not verified. Plese Register instead ",
     });
@@ -148,17 +148,17 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   // If password is incorrect
-  return res.status(401).json({ status: "error", message: "Wrong Password" });
+  return res.status(200).json({ status: "error", message: "Wrong Password" });
 });
 
 const currUser = asyncHandler(async (req, res) => {
   if (!req.user || !req.user.email) {
-    return res.status(401).json({ status: "error", message: "Unauthorized" });
+    return res.status(200).json({ status: "error", message: "Unauthorized" });
   }
 
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
-    return res.status(404).json({ status: "error", message: "User not found" });
+    return res.status(200).json({ status: "error", message: "User not found" });
   }
   return res.json({ status: "success", user });
 });
@@ -169,12 +169,12 @@ const verifyUser = asyncHandler(async (req, res) => {
   // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
-    return res.status(404).json({ status: "error", message: "User not found" });
+    return res.status(200).json({ status: "error", message: "User not found" });
   }
 
   // Check if user is already verified
   if (user.isVerified) {
-    return res.status(400).json({
+    return res.status(200).json({
       status: "error",
       message: "User already verified. Login instead",
     });
@@ -182,7 +182,7 @@ const verifyUser = asyncHandler(async (req, res) => {
 
   // Check if the code has expired
   if (Date.now() > user.verificationCodeExpiry) {
-    return res.status(400).json({
+    return res.status(200).json({
       status: "error",
       message: "Verification code expired. Please register again",
     });
@@ -198,7 +198,7 @@ const verifyUser = asyncHandler(async (req, res) => {
 
   // Incorrect code
   return res
-    .status(400)
+    .status(200)
     .json({ status: "error", message: "Incorrect verification code" });
 });
 
