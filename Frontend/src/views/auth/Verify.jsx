@@ -47,7 +47,7 @@ export default function Verify() {
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent form submission from reloading the page
 
-    if (otp.join("").length != 6) {
+    if (otp.join("").length !== 6) {
       setError(true);
       setPara("Please enter correct OTP.");
       return;

@@ -6,13 +6,16 @@ import AuthLayout from "layouts/auth";
 
 import Register from "views/auth/Register";
 import Verify from "views/auth/Verify";
+import PrivateRoute from "protectedRoute";
 
 const App = () => {
   return (
     <Routes>
+      <Route
+        path="admin/*"
+        element={<PrivateRoute element={<AdminLayout />} />}
+      />
       <Route path="auth/*" element={<AuthLayout />} />
-      <Route path="admin/*" element={<AdminLayout />} />
-      {/* <Route path="rtl/*" element={<RtlLayout />} /> */}
       <Route path="/" element={<Navigate to="/admin" replace />} />
       <Route path="auth/register" element={<Register />} />
       <Route path="auth/verify" element={<Verify />} />

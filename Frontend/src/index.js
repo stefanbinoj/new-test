@@ -3,6 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 
 import App from "./App";
+import PrivateRoute from "protectedRoute";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 

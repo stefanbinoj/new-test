@@ -24,7 +24,6 @@ const Dashboard = () => {
   const navigate = useNavigate();
 
   const [showCompanyModal, setCompanyModal] = useState(false);
-  const [showToaster, setShowToaster] = useState(false);
 
   const hanleModalClose = () => {
     setCompanyModal(false);
@@ -36,18 +35,12 @@ const Dashboard = () => {
     const showModal = urlParams.get("showCompanyModel");
     if (accessToken) {
       localStorage.setItem("accessToken", accessToken);
-      setShowToaster(true);
+      toast.success("Created Account sucessfully");
     }
     if (showModal) setCompanyModal(true);
 
     if (accessToken || showModal) navigate(`/admin/default`);
-  }, []);
-
-  useEffect(() => {
-    if (showToaster) {
-      toast.success("Created Account sucessfully");
-    }
-  }, [showToaster]); // Depend on showToaster to trigger toast when it's true
+  }, [navigate]);
 
   return (
     <div>

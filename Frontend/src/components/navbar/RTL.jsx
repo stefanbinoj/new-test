@@ -216,7 +216,7 @@ const Navbar = (props) => {
                   href=" "
                   className="mt-3 text-sm font-medium text-red-500 transition duration-150 ease-out hover:text-red-500 hover:ease-in"
                 >
-                  Log Out
+                  Log Out-rtl
                 </a>
               </div>
             </div>

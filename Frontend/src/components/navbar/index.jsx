@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Dropdown from "components/dropdown";
 import { FiAlignJustify } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import navbarimage from "assets/img/layout/Navbar.png";
 import { BsArrowBarUp } from "react-icons/bs";
 import { FiSearch } from "react-icons/fi";
@@ -11,11 +11,9 @@ import {
   IoMdInformationCircleOutline,
 } from "react-icons/io";
 import avatar from "assets/img/avatars/avatar4.png";
-import axios from "axios";
 import axiosWithHeaders from "../../axios";
 
 const Navbar = (props) => {
-  const navigate = useNavigate();
   const [name, setName] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
@@ -32,6 +30,10 @@ const Navbar = (props) => {
   }, []);
   const { onOpenSidenav, brandText } = props;
   const [darkmode, setDarkmode] = React.useState(false);
+
+  const handleLogout = () => {
+    localStorage.removeItem("accessToken");
+  };
 
   return (
     <nav className="sticky top-4 z-40 flex flex-row flex-wrap items-center justify-between rounded-xl bg-white/10 p-2 backdrop-blur-xl dark:bg-[#0b14374d]">
@@ -229,6 +231,7 @@ const Navbar = (props) => {
                 <a
                   href=" "
                   className="mt-3 text-sm font-medium text-red-500 transition duration-150 ease-out hover:text-red-500 hover:ease-in"
+                  onClick={handleLogout}
                 >
                   Log Out
                 </a>
