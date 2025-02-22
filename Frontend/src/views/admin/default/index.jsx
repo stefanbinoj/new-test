@@ -6,6 +6,7 @@ import { IoMdHome } from "react-icons/io";
 import { IoDocuments } from "react-icons/io5";
 import { MdBarChart, MdDashboard } from "react-icons/md";
 import toast, { Toaster } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 import { columnsDataCheck, columnsDataComplex } from "./variables/columnsData";
 
@@ -20,6 +21,8 @@ import tableDataComplex from "./variables/tableDataComplex.json";
 import { useEffect, useState } from "react";
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+
   const [showCompanyModal, setCompanyModal] = useState(false);
   const [showToaster, setShowToaster] = useState(false);
 
@@ -36,6 +39,8 @@ const Dashboard = () => {
       setShowToaster(true);
     }
     if (showModal) setCompanyModal(true);
+
+    if (accessToken || showModal) navigate(`/admin/default`);
   }, []);
 
   useEffect(() => {

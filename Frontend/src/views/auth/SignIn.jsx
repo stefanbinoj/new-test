@@ -46,10 +46,13 @@ export default function SignIn() {
         setError(false);
         toast.success("Login Successfull");
 
-        const { accessToken } = response.data;
+        const { accessToken, showCompany } = response.data;
         localStorage.setItem("accessToken", accessToken);
 
-        navigate(`/admin/default`);
+        if (showCompany === true) {
+          return navigate(`/admin/default?showCompanyModel=true`);
+        }
+        return navigate(`/admin/default`);
       } else {
         setError(true);
         setPara(response.data.message);

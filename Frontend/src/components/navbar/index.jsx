@@ -12,33 +12,18 @@ import {
 } from "react-icons/io";
 import avatar from "assets/img/avatars/avatar4.png";
 import axios from "axios";
+import axiosWithHeaders from "../../axios";
 
 const Navbar = (props) => {
   const navigate = useNavigate();
-  const [token, setToken] = useState(null);
   const [name, setName] = useState(null);
   useEffect(() => {
     const fetchData = async () => {
-      let tokenInLocal = localStorage.getItem("accessToken");
-      if (tokenInLocal) {
-        console.log("Token present", tokenInLocal);
-        setToken(tokenInLocal);
-
-        try {
-          const response = await axios.get(
-            "http://localhost:4002/api/users/current",
-            {
-              headers: {
-                Authorization: "Bearer " + tokenInLocal, // Using token from localStorage
-              },
-            }
-          );
-
-          console.log("Response Data:", response.data);
-          setName(response.data.email);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
+      try {
+        const response = await axiosWithHeaders().get("/api/users/current");
+        setName(response.data.user.email);
+      } catch (error) {
+        console.error("Error fetching data:", error);
       }
     };
 
@@ -218,24 +203,14 @@ const Navbar = (props) => {
           }
           children={
             <div className="flex w-56 flex-col justify-start rounded-[20px] bg-white bg-cover bg-no-repeat shadow-xl shadow-shadow-500 dark:!bg-navy-700 dark:text-white dark:shadow-none">
-              {token ? (
-                <div className="p-4">
-                  <div className="flex items-center gap-2">
-                    <p className="text-sm font-bold text-navy-700 dark:text-white">
-                      👋 Hey, {name}
-                    </p>{" "}
-                  </div>
+              <div className="p-4">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-bold text-navy-700 dark:text-white">
+                    👋 Hey, {name}
+                  </p>{" "}
                 </div>
-              ) : (
-                <button
-                  className="mx-5 my-2 rounded bg-brandLinear px-1"
-                  onClick={() => {
-                    navigate("/auth/sign-in");
-                  }}
-                >
-                  Login
-                </button>
-              )}
+              </div>
+
               <div className="h-px w-full bg-gray-200 dark:bg-white/20 " />
 
               <div className="flex flex-col p-4">

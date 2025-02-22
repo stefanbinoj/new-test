@@ -8,7 +8,6 @@ const User = require("../models/userModel");
 const registerUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  // Validation check
   if (!email || !password) {
     return res
       .status(400)
@@ -67,10 +66,8 @@ const registerUser = asyncHandler(async (req, res) => {
     }
   }
 
-  // Hash password
   const hashedPassword = await bcrypt.hash(password, 10);
 
-  // Generate verification code and expiry time
   const verificationCode = crypto.randomInt(100000, 999999);
   const verificationCodeExpiry = Date.now() + 600000; // 10 minutes
 
@@ -85,7 +82,6 @@ const registerUser = asyncHandler(async (req, res) => {
   // Send verification email
   await sendEmail(email, verificationCode);
 
-  // Check if user created successfully and send response
   if (user) {
     return res.status(201).json({
       status: "success",
@@ -102,14 +98,12 @@ const registerUser = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
 
-  // Validation check
   if (!email || !password) {
     return res
       .status(400)
       .json({ status: "error", message: "All fields are mandatory" });
   }
 
-  // Find user by email
   const user = await User.findOne({ email });
   if (!user) {
     return res
@@ -124,7 +118,6 @@ const loginUser = asyncHandler(async (req, res) => {
     });
   }
 
-  // Check if user is verified
   if (!user.isVerified) {
     return res.status(400).json({
       status: "error",
@@ -132,7 +125,6 @@ const loginUser = asyncHandler(async (req, res) => {
     });
   }
 
-  // Compare password
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (user && isPasswordMatch) {
     const accessToken = jwt.sign(
@@ -140,9 +132,15 @@ const loginUser = asyncHandler(async (req, res) => {
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "7d" }
     );
+    const showCompany = user.companyName ? false : true;
     return res
       .status(200)
-      .json({ status: "success", accessToken, message: "JWT created" });
+      .json({
+        status: "success",
+        accessToken,
+        message: "JWT created",
+        showCompany,
+      });
   }
 
   // If password is incorrect
@@ -154,7 +152,6 @@ const currUser = asyncHandler(async (req, res) => {
     return res.status(401).json({ status: "error", message: "Unauthorized" });
   }
 
-  // Send current user information
   const user = await User.findOne({ email: req.user.email });
   if (!user) {
     return res.status(404).json({ status: "error", message: "User not found" });
