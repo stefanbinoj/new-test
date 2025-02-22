@@ -18,9 +18,53 @@ const registerUser = asyncHandler(async (req, res) => {
   // Check if user already exists
   const userAvailable = await User.findOne({ email });
   if (userAvailable && userAvailable.isVerified) {
-    return res
-      .status(400)
-      .json({ status: "error", message: "User already exists. Login instead" });
+    return res.status(400).json({
+      status: "error",
+      message: "Verified User already exists. Login instead",
+    });
+  }
+  if (userAvailable && userAvailable.isGoogleVerified) {
+    return res.status(400).json({
+      status: "error",
+      message: "Please sign in with Google",
+    });
+  }
+
+  if (userAvailable) {
+    const isPasswordMatch = await bcrypt.compare(
+      password,
+      userAvailable.password
+    );
+    if (!isPasswordMatch) {
+      return res
+        .status(400)
+        .json({ status: "error", message: "Password Incorrect" });
+    }
+
+    const verificationCode = crypto.randomInt(100000, 999999);
+    const verificationCodeExpiry = Date.now() + 600000; // 10 minutes
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await User.findOneAndUpdate(
+      { email },
+      {
+        password: hashedPassword,
+        verificationCode,
+        verificationCodeExpiry,
+      },
+      { new: true }
+    );
+
+    // Send verification email
+    await sendEmail(email, verificationCode);
+
+    if (user) {
+      return res.status(200).json({
+        status: "success",
+        email: user.email,
+        message: "Verify using otp",
+      });
+    }
   }
 
   // Hash password
@@ -75,7 +119,7 @@ const loginUser = asyncHandler(async (req, res) => {
   if (!user.isVerified) {
     return res.status(400).json({
       status: "error",
-      message: "User not verified. Register user instead",
+      message: "User not verified. Plese Verify the user ",
     });
   }
 

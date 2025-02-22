@@ -50,9 +50,9 @@ passport.use(
         if (!user) {
           user = await User.create({
             email: profile.emails[0].value,
+            isGoogleVerified: true,
           });
         }
-        console.log(user);
         return done(null, user);
       } catch (error) {
         return done(error, null);

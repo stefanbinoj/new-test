@@ -31,6 +31,7 @@ router.get(
     failureRedirect: "/login",
   }),
   (req, res) => {
+    console.log("From google", req.user);
     const user = req.user;
     console.log("google user : ", user);
     const accessToken = jwt.sign(

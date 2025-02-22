@@ -18,10 +18,12 @@ const userSchema = mongoose.Schema(
     verificationCodeExpiry: Date,
     isVerified: {
       type: Boolean,
-      default: false,
     },
     companyName: {
       type: String,
+    },
+    isGoogleVerified: {
+      type: Boolean,
     },
   },
   {
