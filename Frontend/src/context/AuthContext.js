@@ -18,10 +18,7 @@ const SessionProvider = ({ children }) => {
         "/api/session/session-check"
       );
 
-      console.log(response);
-
       if (response.data.status !== "success" || !response.data.isValid) {
-        console.log(12);
         setLoading(false);
         navigate("/auth/sign-in");
       } else {

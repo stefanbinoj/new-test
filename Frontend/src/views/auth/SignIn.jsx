@@ -56,20 +56,24 @@ export default function SignIn() {
     try {
       response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/users/login`,
-        { email, password }
+        { email, password },
+        {
+          withCredentials: true, // Add this to allow cookies
+        }
       );
-
       // Handle successful response
       if (response.data.status === "success") {
         setError(false);
         toast.success("Login Successfull");
+        await new Promise((resolve) => setTimeout(resolve, 100));
 
         const { showCompany } = response.data;
 
         if (showCompany === true) {
-          return navigate(`/admin/default?showCompanyModel=true`);
+          window.location.href = "/admin/default?showCompanyModel=true";
+        } else {
+          window.location.href = "/admin/default";
         }
-        return navigate(`/admin/default`);
       } else {
         setError(true);
         setPara(response.data.message);

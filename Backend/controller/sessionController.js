@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 
 const checkSession = asyncHandler(async (req, res) => {
   const token = req.cookies.token;
+  console.log("cookies : ", token);
 
   if (!token) {
     return res.status(401).json({
@@ -14,7 +15,7 @@ const checkSession = asyncHandler(async (req, res) => {
 
   jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decode) => {
     if (err) {
-      return res.status(401).json({
+      return res.status(402).json({
         status: "error",
         message: "Wrong JWT. Please login again",
         isValid: false,

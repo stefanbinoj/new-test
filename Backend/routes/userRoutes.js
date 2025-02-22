@@ -28,7 +28,7 @@ router.get(
   "/google/callback",
   passport.authenticate("google", {
     session: false,
-    failureRedirect: "http://localhost:3000/auth/sign-in?error=true",
+    failureRedirect: `${process.env.FRONTEND_BASE_URL}/auth/sign-in?error=true`,
   }),
   (req, res) => {
     const user = req.user;
