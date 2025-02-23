@@ -94,7 +94,7 @@ export default function Verify() {
       <div className="relative mt-[10vh] w-full max-w-full flex-col items-center md:pl-4 lg:pl-0 xl:max-w-[420px]">
         <div className="">
           <Toaster />
-          <Link to="/admin" className="absolute  top-0 mt-0 w-max">
+          <Link to="/auth/sign-in" className="absolute  top-0 mt-0 w-max">
             <div className="mx-auto flex h-fit w-fit items-center hover:cursor-pointer">
               <svg
                 width="8"
@@ -108,7 +108,7 @@ export default function Verify() {
                   fill="#A3AED0"
                 />
               </svg>
-              <p className="ml-3 text-sm text-gray-600">Back to Dashboard</p>
+              <p className="ml-3 text-sm text-gray-600">Back to sign-in</p>
             </div>
           </Link>
           <h4 className="mb-2.5 mt-8 text-4xl font-bold text-navy-700 dark:text-white">

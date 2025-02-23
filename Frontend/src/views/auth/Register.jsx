@@ -79,7 +79,7 @@ export default function Register() {
   return (
     <div className="relative mb-16 mt-16 flex h-full w-full items-center justify-center  px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-center">
       <div className="bg-white px-11 py-8">
-        <Link to="/admin" className="absolute top-10 w-max  ">
+        <Link to="/auth/sign-in" className="absolute top-10 w-max  ">
           <div className="mx-auto flex h-fit w-fit items-center hover:cursor-pointer">
             <svg
               width="8"
@@ -93,7 +93,7 @@ export default function Register() {
                 fill="#A3AED0"
               />
             </svg>
-            <p className="ml-3 text-sm text-gray-600">Back to Dashboard</p>
+            <p className="ml-3 text-sm text-gray-600">Back to sign in</p>
           </div>
         </Link>
         {/* Sign in section */}
