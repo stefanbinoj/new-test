@@ -26,7 +26,7 @@ const checkSession = asyncHandler(async (req, res) => {
       status: "success",
       message: "User present",
       isValid: true,
-      isAdmin: true,
+      isAdmin: decode.user.role == "superAdmin" ? true : false,
     });
   });
 });

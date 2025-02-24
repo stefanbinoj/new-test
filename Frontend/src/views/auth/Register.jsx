@@ -20,8 +20,9 @@ export default function Register() {
   const handleEmaiSignIn = async () => {
     const email = emailInputRef.current.value; // No need for JSON.stringify()
     const password = passwordInputRef.current.value;
+    const name = nameInputRef.current.value; // Get the name input value
 
-    if (!email || !password) {
+    if (!email || !password || !name) { // Check for name as well
       setError(true);
       setPara("All fields are mandatory");
       return;
@@ -46,7 +47,7 @@ export default function Register() {
     try {
       response = await axios.post(
         `${process.env.REACT_APP_API_URL}/api/users/register`,
-        { email, password }
+        { email, password, name } // Include name in the request
       );
 
       // Handle successful response
@@ -75,6 +76,7 @@ export default function Register() {
   };
   const emailInputRef = useRef();
   const passwordInputRef = useRef();
+  const nameInputRef = useRef(); // Create a ref for the name input
 
   return (
     <div className="relative mb-16 mt-16 flex h-full w-full items-center justify-center  px-2 md:mx-0 md:px-0 lg:mb-10 lg:items-center lg:justify-center">
@@ -121,6 +123,16 @@ export default function Register() {
             <p className="text-base text-gray-600 dark:text-white"> or </p>
             <div className="h-px w-full bg-gray-200 dark:bg-navy-700" />
           </div>
+          {/* Name */}
+          <InputField
+            variant="auth"
+            extra="mb-3"
+            label="Name*"
+            placeholder="Your Name"
+            id="name"
+            type="text"
+            ref={nameInputRef} // Add the name input field
+          />
           {/* Email */}
           <InputField
             variant="auth"
