@@ -7,7 +7,10 @@ const {
   loginUser,
   currUser,
   verifyUser,
+  getClients,
+  deleteClient,
 } = require("../controller/userController");
+
 const validateToken = require("../middleware/validateTokenHandler");
 
 const router = express.Router();
@@ -18,6 +21,8 @@ router.post("/register", registerUser);
 router.post("/verify-otp", verifyUser);
 router.post("/login", loginUser);
 router.get("/current", validateToken, currUser);
+router.get("/clients",  getClients);
+router.delete("/delete/:id", validateToken, deleteClient);
 
 router.get(
   "/google",
@@ -32,7 +37,6 @@ router.get(
   }),
   (req, res) => {
     const user = req.user;
-    console.log(req.query);
     if (req.query.error) {
       return res.redirect(
         `/auth/sign-in?error=true&message=${req.query.message}`
@@ -41,8 +45,10 @@ router.get(
     const token = jwt.sign(
       {
         user: {
+          name: user.name,
           email: user.email,
           id: user.id,
+          role: user.role || "client", // Added role to the JWT payload
         },
       },
       process.env.ACCESS_TOKEN_SECRET,

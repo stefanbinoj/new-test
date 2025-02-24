@@ -3,13 +3,16 @@ import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import Navbar from "components/navbar";
 import Sidebar from "components/sidebar";
 import Footer from "components/footer/Footer";
-import routes from "routes.js";
+import { adminRoutes, clientRoutes } from "../../routes.js";
+import { useSession } from "context/AuthContext";
 
 export default function Admin(props) {
   const { ...rest } = props;
   const location = useLocation();
+  const { isAdmin } = useSession();
   const [open, setOpen] = React.useState(true);
   const [currentRoute, setCurrentRoute] = React.useState("Main Dashboard");
+  const routes = isAdmin ? adminRoutes : clientRoutes;
 
   React.useEffect(() => {
     window.addEventListener("resize", () =>

@@ -6,9 +6,9 @@ const sendEmail = require("../utils/sendEmail");
 const User = require("../models/userModel");
 
 const registerUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
+  const { email, password, name } = req.body; 
 
-  if (!email || !password) {
+  if (!email || !password || !name) { 
     return res
       .status(200)
       .json({ status: "error", message: "All fields are mandatory" });
@@ -75,6 +75,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const user = await User.create({
     email,
     password: hashedPassword,
+    name,
     verificationCode,
     verificationCodeExpiry,
   });
@@ -128,7 +129,7 @@ const loginUser = asyncHandler(async (req, res) => {
   const isPasswordMatch = await bcrypt.compare(password, user.password);
   if (user && isPasswordMatch) {
     const token = jwt.sign(
-      { user: { email: user.email, id: user.id } },
+      { user: { email: user.email, id: user.id, role: user.role } },
       process.env.ACCESS_TOKEN_SECRET,
       { expiresIn: "7d" }
     );
@@ -202,4 +203,41 @@ const verifyUser = asyncHandler(async (req, res) => {
     .json({ status: "error", message: "Incorrect verification code" });
 });
 
-module.exports = { registerUser, loginUser, currUser, verifyUser };
+const getClients = asyncHandler(async (req, res) => {
+  try {
+    const clients = await User.find({ role: "client" });
+
+    if (!clients || clients.length === 0) {
+      return res.status(404).json({ message: "No clients found" });
+    }
+
+    res.status(200).json({ clients });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching clients", error: error.message });
+  }
+});
+
+const deleteClient = asyncHandler(async (req, res) => {
+  try {
+    const clientId = req.params.id;
+
+    // Find and delete the client
+    const deletedClient = await User.findByIdAndDelete(clientId);
+
+    if (!deletedClient) {
+      return res.status(404).json({ message: "Client not found" });
+    }
+
+    // Check if deleted user was actually a client
+    if (deletedClient.role !== "client") {
+      return res.status(400).json({ message: "Can only delete users with client role" });
+    }
+
+    res.status(200).json({ message: "Client deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Error deleting client", error: error.message });
+  }
+});
+
+module.exports = { registerUser, loginUser, currUser, verifyUser, getClients, deleteClient };
+
